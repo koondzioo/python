@@ -1,76 +1,93 @@
 import math
-import random
 
-KROWY = 0  # za poprawne odgagniecie z miejscem
-BYKI = 0  # za zgadniecie ze liczba jest w numerze
-DICT_ELEMENTS = {}
-PROBY = 0
-SET_POINTS = set()
-# TODO refactor
 
-def game():
+def main():
+    cows = 0
+    bulls = 0
+    dict_elements = {}
+    attempts = 0
+    set_points = set()
+    helpers = [cows, bulls, attempts, dict_elements, set_points]
     """function starts games"""
     print('Witaj w grze Krowy i Byki')
-    random_number = 5551
+    random_number = 3393
     while True:
-        number = input("Podaj liczbę ")
-        number_user = create_array(int(number))
-        if check_numbers(number_user, create_array(random_number)):
-            pass
-        else:
+        number_random, number_user = create_numbers(random_number)
+        if not count_attemps(number_user, number_random, helpers):
             break
 
 
-# / vs // (Python2 and Python3)
-def create_array(number):
-    """create array of digits from number"""
-    arr = []
+def input_number():
+    """Function to validate user input"""
+    while True:
+        value = input("Podaj liczbę ")
+        if value.isdigit():
+            return int(value)
+
+
+def create_numbers(random_number):
+    """Function to create numbers to game"""
+    number = input_number()
+    number_user = create_list_from_number(int(number))
+    number_random = create_list_from_number(random_number)
+    return number_random, number_user
+
+
+def create_list_from_number(number):
+    """create list of digits from number"""
+    separate_number = []
     while number:
-        arr.append(math.floor(number % 10))
+        separate_number.append(math.floor(number % 10))
         number //= 10
-    return arr[::-1]
+    return separate_number[::-1]
 
 
-def check_numbers(number_user, number_random):
-    """Function to count PROBY and management results BYKI, KROWY"""
-    global PROBY, KROWY, BYKI
+def count_attemps(number_user, number_random, helpers):
+    """Function to count attempts and management results bulls and cows"""
     if number_random == number_user:
-        PROBY += 1
-        print("Wygrales! Koniec Gry! Liczba prób: {}".format(PROBY))
+        helpers[2] += 1
+        print("Wygrales! Koniec Gry! Liczba prób: {}".format(helpers[2]))
         return False
     else:
-        check_this_same_places(number_user, number_random)
-        check_if_exsits(check_numbers_exstits_in_both_list(number_user, number_random))
-        print("Krowy: {}, Byki: {}".format(KROWY, BYKI))
-        PROBY += 1
+        helpers = count_points(number_random, number_user, helpers)
+        print("Krowy: {}, Byki: {}".format(helpers[0], helpers[1]))
+        helpers[2] += 1
+        print('proby {}'.format(helpers[2]))
         return True
 
 
-def check_this_same_places(number_user, number_random):
+def count_points(number_random, number_user, helpers):
+    """Function count cows, bulls and update dict and set points"""
+    helpers[0], helpers[3] = count_cows(number_user, number_random, helpers)
+    helpers[1], helpers[3], helpers[4] = count_bulls(find_commons_elements(number_user, number_random), helpers)
+    return helpers
+
+
+def count_cows(numbers_user, numbers_random, helpers):
     """add element with idx: value to dictionary if in both list have this same value and idx"""
-    global KROWY, DICT_ELEMENTS
-    for idx, (a, b) in enumerate(zip(number_user, number_random)):
-        if a == b:
-            if idx not in DICT_ELEMENTS.keys():
-                KROWY += 1
-                DICT_ELEMENTS.update({idx: a})
-        else:
-            pass
+    cows, dict_elements = helpers[0], helpers[3]
+    for idx, (digit_user, digit_random) in enumerate(zip(numbers_user, numbers_random)):
+        if digit_user == digit_random:
+            if idx not in dict_elements.keys():
+                cows += 1
+                dict_elements.update({idx: digit_user})
+    return cows, dict_elements
 
 
-def check_numbers_exstits_in_both_list(number_user, number_random):
+def find_commons_elements(number_user, number_random):
     """return list contains part of the common elements in lists (arg1, arg2) """
     return [item for item in number_user if item in number_random]
 
 
-def check_if_exsits(arr):
-    """check if element in array not exists in dict results add value to BYKI """
-    global BYKI, DICT_ELEMENTS, SET_POINTS
-    for el in arr:
-        if el not in DICT_ELEMENTS.values() and el not in SET_POINTS:
-            SET_POINTS.add(el)
-            BYKI += 1
+def count_bulls(commons_elements, helpers):
+    """check if element in list not exists in dict results add value to BYKI """
+    bulls, dict_elements, set_points = helpers[1], helpers[3], helpers[4]
+    for element in commons_elements:
+        if element not in dict_elements.values() and element not in set_points:
+            set_points.add(element)
+            bulls += 1
+    return bulls, dict_elements, set_points
 
 
 if __name__ == '__main__':
-    game()
+    main()

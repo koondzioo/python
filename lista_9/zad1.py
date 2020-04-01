@@ -65,7 +65,6 @@ class Samochod():
             for kk, vv in v.items():
                 print(f'{kk}, {vv}')
 
-# TODO spalanie ??
     # https://matplotlib.org/index.html
     def print_graph(self):
         x = [element['czas_podrozy'] for element in self.dane_trasy.values()]
