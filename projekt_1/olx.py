@@ -5,8 +5,9 @@ from bs4 import BeautifulSoup
 
 from flat import Flat
 
-#TODO mozna uzyc selenium albo api olx
-class OLX:
+
+# TODO mozna uzyc selenium albo api olx
+class OLX():
     def __init__(self, url):
         self.url = url
         self.response = requests.get(url)

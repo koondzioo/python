@@ -1,22 +1,6 @@
 import math
 
 
-def main():
-    cows = 0
-    bulls = 0
-    dict_elements = {}
-    attempts = 0
-    set_points = set()
-    helpers = [cows, bulls, attempts, dict_elements, set_points]
-    """function starts games"""
-    print('Witaj w grze Krowy i Byki')
-    random_number = 3393
-    while True:
-        number_random, number_user = create_numbers(random_number)
-        if not count_attemps(number_user, number_random, helpers):
-            break
-
-
 def input_number():
     """Function to validate user input"""
     while True:
@@ -87,6 +71,23 @@ def count_bulls(commons_elements, helpers):
             set_points.add(element)
             bulls += 1
     return bulls, dict_elements, set_points
+
+
+def main():
+    """function starts games"""
+    cows = 0
+    bulls = 0
+    dict_elements = {}
+    attempts = 0
+    set_points = set()
+    #TODO rozbic z tablicy
+    helpers = [cows, bulls, attempts, dict_elements, set_points]
+    print('Witaj w grze Krowy i Byki')
+    random_number = 3393
+    while True:
+        number_random, number_user = create_numbers(random_number)
+        if not count_attemps(number_user, number_random, helpers):
+            break
 
 
 if __name__ == '__main__':

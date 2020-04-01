@@ -1,6 +1,6 @@
 
 
-def calculate_capacity(a, *args):
+def calculate_capacity(a, b=None, c=None):
     """Function to calculate capacity"""
     if not args:
         return a**3
